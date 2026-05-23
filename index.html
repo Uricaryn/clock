@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { 
+            background-color: #050505; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+            background-image: radial-gradient(circle, #1a0000 0%, #000000 80%);
+            cursor: auto; 
+            transition: cursor 0.3s;
+        }
+        #saat { 
+            color: #8b0000; 
+            font-family: 'Times New Roman', serif; 
+            font-size: 15vw; 
+            font-weight: bold; 
+            text-shadow: 0 0 20px #4a0000, 0 0 5px #000;
+            letter-spacing: 5px;
+            font-variant-numeric: tabular-nums;
+            user-select: none;
+        }
+        /* Kontrol paneli */
+        #ayarlar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #111;
+            padding: 15px;
+            border: 1px solid #8b0000;
+            display: none; /* Başlangıçta gizli */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="saat">00:00:00</div>
+
+    <div id="ayarlar">
+        <input type="time" id="zamanGiris" step="1" style="background:#000; color:#8b0000; border:1px solid #8b0000;">
+        <button onclick="setManually()" style="background:#8b0000; color:white; border:none; padding: 3px 10px; cursor:pointer;">UYGULA</button>
+    </div>
+
+    <script>
+        let zaman = new Date();
+        let calisiyor = true;
+
+        function guncelle() {
+            if (calisiyor) {
+                zaman.setSeconds(zaman.getSeconds() + 1);
+            }
+            let s = String(zaman.getHours()).padStart(2, '0');
+            let m = String(zaman.getMinutes()).padStart(2, '0');
+            let sn = String(zaman.getSeconds()).padStart(2, '0');
+            document.getElementById('saat').innerText = `${s}:${m}:${sn}`;
+        }
+
+        function setManually() {
+            let val = document.getElementById('zamanGiris').value;
+            if (val) {
+                let [s, m] = val.split(':').map(Number);
+                zaman.setHours(s, m, 0);
+                document.getElementById('ayarlar').style.display = 'none';
+            }
+        }
+
+        // 'A' tuşu ile paneli aç
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'a') {
+                document.getElementById('ayarlar').style.display = 'block';
+            }
+        });
+
+        setInterval(guncelle, 1000);
+        guncelle();
+
+        // İmleç gizleme
+        let imlecGizlemeZamanlayici;
+        document.addEventListener('mousemove', () => {
+            document.body.style.cursor = 'auto';
+            clearTimeout(imlecGizlemeZamanlayici);
+            imlecGizlemeZamanlayici = setTimeout(() => {
+                document.body.style.cursor = 'none';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
